@@ -1,0 +1,28 @@
+{
+  "name": "react-autobahn",
+  "version": "0.0.1",
+  "description": "Do realtime without headaches with React.",
+  "main": "modules/index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RaitoBezarius/react-autobahn.git"
+  },
+  "keywords": [
+    "react",
+    "realtime",
+    "autobahn",
+    "wampws"
+  ],
+  "author": "Raito Bezarius <masterancpp@gmail.com>",
+  "license": "GPLv2",
+  "bugs": {
+    "url": "https://github.com/RaitoBezarius/react-autobahn/issues"
+  },
+  "homepage": "https://github.com/RaitoBezarius/react-autobahn#readme"
+}
