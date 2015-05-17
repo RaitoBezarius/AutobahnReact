@@ -1,0 +1,128 @@
+
+{
+   "controller": {
+   },
+   "workers": [
+      {
+        "type": "guest",
+        "executable": "babel-node",
+        "arguments": ["app/main.js"],
+        "options": {
+          "workdir": "../",
+          "watch": {
+            "directories": ["../app/"],
+            "action": "restart"
+          }
+        }
+      },
+      {
+         "type": "router",
+         "realms": [
+            {
+               "name": "example",
+               "roles": [
+                  {
+                     "name": "anonymous",
+                     "permissions": [
+                        {
+                           "uri": "com.auth.signup",
+                           "publish": false,
+                           "subscribe": false,
+                           "call": true,
+                           "register": false
+                        },
+                        {
+                            "uri": "com.meetup.react.*",
+                            "subscribe": true,
+                            "call": true,
+                            "register": true,
+                            "publish": true
+                        },
+                        {
+                            "uri": "com.example.chat.events.*",
+                            "subscribe": true,
+                            "call": false,
+                            "register": false
+                        },
+                        {
+                            "uri": "com.example.chat.user.*",
+                            "publish": true,
+                            "subscribe": false,
+                            "call": false,
+                            "register": false
+                        }
+                     ]
+                  },
+                  {
+                    "name": "user",
+                    "permissions": [
+                      {
+                        "uri": "*",
+                        "publish": true,
+                        "subscribe": true,
+                        "call": true,
+                        "register": false
+                      }
+                    ]
+                  },
+                  {
+                    "name": "system",
+                    "permissions": [
+                      {
+                        "uri": "*",
+                        "publish": true,
+                        "subscribe": true,
+                        "call": true,
+                        "register": true
+                      }
+                    ]
+                  }
+               ]
+            }
+         ],
+         "transports": [
+            {
+               "type": "web",
+               "endpoint": {
+                  "type": "tcp",
+                  "port": 8000
+               },
+               "paths": {
+                  "/": {
+                     "type": "static",
+                     "directory": "../.."
+                  },
+                  "ws": {
+                     "type": "websocket",
+                     "auth": {
+                       "wampcra": {
+                         "type": "dynamic",
+                         "authenticator": "com.auth.standard_authenticate"
+                       },
+                       "ticket": {
+                         "type": "dynamic",
+                         "authenticator": "com.auth.token_authenticate"
+                       },
+                       "anonymous": {}
+                     }
+                  },
+                  "system": {
+                    "type": "websocket",
+                    "auth": {
+                      "ticket": {
+                        "type": "static",
+                        "principals": {
+                          "authenticator": {
+                            "ticket": "SECRET",
+                            "role": "system"
+                          }
+                        }
+                      }
+                    }
+                  }
+               }
+            }
+         ]
+      }
+   ]
+}

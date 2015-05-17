@@ -1,0 +1,34 @@
+{
+  "name": "autobahn-react-authflow",
+  "version": "0.0.1",
+  "description": "Example AutobahnReact application intended to explain how the authflow works using Autobahn and React",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "check": "jsxhint src/app.js",
+    "build": "mkdir -p build && browserify src/app.js > build/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RaitoBezarius/AutobahnReact.git"
+  },
+  "author": "Raito Bezarius <masterancpp@gmail.com>",
+  "license": "GPLv2",
+  "bugs": {
+    "url": "https://github.com/RaitoBezarius/AutobahnReact/issues"
+  },
+  "homepage": "https://github.com/RaitoBezarius/AutobahnReact/examples/authflow/#readme",
+  "browserify": {
+    "transform": [
+      "babelify",
+      "envify"
+    ]
+  },
+  "dependencies": {
+    "react": "^0.13.3",
+    "react-router": "^0.13.3"
+  },
+  "devDependencies": {
+    "jsxhint": "^0.15.1"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "autobahn-react-backend-example",
+  "version": "0.0.1",
+  "description": "An example of backend for AutobahnReact's examples.",
+  "main": "app/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "sudo pip install crossbar",
+    "start": "crossbar start"
+  },
+  "author": "Raito Bezarius <masterancpp@gmail.com>",
+  "license": "GPLv2",
+  "dependencies": {
+    "autobahn": "^0.9.6",
+    "babel": "^5.5.6"
+  }
+}

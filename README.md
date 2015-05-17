@@ -1,2 +1,2 @@
-# react-autobahn
-Make realtime a breeze in React.
+# AutobahnReact
+Make realtime a breeze with React and Autobahn.

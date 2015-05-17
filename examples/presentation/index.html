@@ -1,0 +1,758 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Le realtime avec React</title>
+
+		<meta name="description" content="Le temps-réel n'a jamais été aussi simple.">
+		<meta name="author" content="Raito Bezarius <masterancpp@gmail.com>">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/night.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/monokai_sublime.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>Le realtime avec React</h1>
+				</section>
+
+                <section>
+                    <section>
+                        <h2>Le realtime dans le web</h2>
+                        <iframe class="fragment" src="//giphy.com/embed/K1xtALHmYJnIA?html5=true" width="480" height="270" frameBorder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+                        <p class="fragment">A toujours été en général très compliqué...</p>
+                    </section>
+
+                    <section>
+                        <h3>AJAX</h3>
+                        <p class="fragment">Tout a démarré de là, en 1998, alors que XMLHTTPRequest était un composant ActiveX de Microsoft.</p>
+                        <p class="fragment">AJAX permet de faire des requêtes asynchrones pour récupérer des données sans recharger une page.</p>
+                        <h4 class="fragment">Problème: </h4>
+                        <ul>
+                            <li class="fragment roll-in">Il faut que le client initie la requête.</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h3>Polling</h3>
+                        <p class="fragment">Le polling consiste à ouvrir une connexion et attendre que le serveur y répond.</p>
+                        <h4 class="fragment">Problèmes: </h4>
+                        <ul>
+                            <li class="fragment roll-in">Impossible à faire scaler sans difficulté</li>
+                            <li class="fragment roll-in">Latence très haute</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <a class="fragment" href="https://imgflip.com/i/mav9f"><img src="https://i.imgflip.com/mav9f.jpg" title="made at imgflip.com"/></a>
+                    </section>
+
+                    <section>
+                        <h3>La naissance des WebSockets</h3>
+                        <p class="fragment">Les WebSocket sont un nouveau standard normalisé assez récemment. <br />
+                        Cette technologie est né afin de pallier les <strong>hacks</strong> qu'on utilisait, le Long Polling notamment.</p>
+                        <p class="fragment">C'est un canal de communication bidirectionnelle, sur une socket TCP.</p>
+                    </section>
+
+                    <section>
+                        <h3>Pourquoi les WebSockets par rapport à AJAX?</h3>
+                        <a class="fragment" href="http://imgur.com/zSFaZgb"><img src="http://i.imgur.com/zSFaZgb.png" title="source: imgur.com" /></a>
+                    </section>
+
+                    <section>
+                        <h3>Qu'en est-il du support?</h3>
+                        <div class="fragment">
+                            <p>Il se trouve que c'est pas mal du tout, seul Opera Mini 8 ne supporte pas les WebSockets.</p>
+                            <img src="http://puu.sh/idIM8/fb5d2f5614.png" />
+                        </div>
+                    </section>
+
+                    <section>
+                        <h3>Socket.IO, le level suivant</h3>
+                        <p class="fragment">Socket.IO encapsule les WebSocket et ajoute une abstraction qui fait en sorte que Socket.IO fallback sur du polling ou des Flash Sockets en absence de WebSockets</p>
+                        <p class="fragment">En plus de cela, il offre du PubSub intégré (avec d'autres trucs cool).</p>
+                        <aside class="notes">
+                            Broadcasting, volatile messages, namespacing.
+                        </aside>
+                        <pre class="fragment"><code data-trim>
+var io = require('socket.io')(80);
+var cfg = require('./config.json');
+var tw = require('node-tweet-stream')(cfg);
+tw.track('socket.io');
+tw.track('javascript');
+tw.on('tweet', function(tweet){
+  io.emit('tweet', tweet);
+});
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h3>Mais... Peut-être qu'il y'a trop de boilerplate encore ?</h3>
+                        <p class="fragment">Socket.IO est très sympathique, beaucoup de projets l'utilisent activement.</p>
+                        <p class="fragment">Cependant pour une grosse web app en SPA, ça peut être trop léger?</p>
+                        <h4 class="fragment">Comment on fait pour gérer l'authentification?</h4>
+                        <h3 class="fragment">Comment on fait pour gérer l'autorisation?</h3>
+                        <h2 class="fragment">Beaucoup de comment (et de boilerplate) !</h2>
+                    </section>
+
+                    <section>
+                        <iframe src="//giphy.com/embed/SfYTJuxdAbsVW?html5=true" width="480" height="382" frameBorder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+                    </section>
+
+                    <section>
+                        <h3>Meteor.js, le fruit ultime du realtime</h3>
+                        <p class="fragment">Il s'agit là d'un des framework web les plus avancés en terme de realtime, il fonctionne en imposant quelques règles: </p>
+                        <ul>
+                            <li class="fragment">Isomorphique par définition, JS server-side, JS client-side.</li>
+                            <li class="fragment">Un nouveau écosystème de packages.</li>
+                        </ul>
+                        <p class="fragment">En échange de ça, il vous donne la possibilité de: </p>
+                        <ul>
+                            <li class="fragment">Live updates (realtime)</li>
+                            <li class="fragment">Compensation de la latence (Interface optimiste)</li>
+                            <li class="fragment">Déploiement à chaud</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h3>En plus, ça s'intégre bien avec React !</h3>
+                        <pre><code data-trim>
+var MyComponent = React.createClass({
+  mixins: [ReactMeteor.Mixin],
+
+  startMeteorSubscriptions: function() {
+    Meteor.subscribe("players");
+  },
+
+  // Make sure your component implements this method.
+  getMeteorState: function() {
+    return {
+      playerCount: Players.find().count(),
+      ...
+    };
+  }
+});
+                        </pre></code>
+                    </section>
+
+                    <section>
+                        <h2>Une alternative à Meteor.js</h2>
+                    </section>
+
+                    <section>
+                        <h3>WAMP, une approche différente</h3>
+                        <a class="fragment" href="https://imgflip.com/i/mha8b"><img src="https://i.imgflip.com/mha8b.jpg" title="made at imgflip.com"/></a>
+                    </section>
+
+                    <section>
+                        <h3>WAMP, une approche différente</h3>
+                        <p class="fragment">WAMP est un protocole qui peut être implementé sur des WebSockets, des RawSockets, ou n'importe quel type de transport.</p>
+                    </section>
+
+                    <section>
+                        <h3>RPC & PubSub</h3>
+                        <p class="fragment">WAMP offre la possibilité d'utiliser des RPC et du PubSub à travers des libraries (qu'on appelle AutobahnXXX souvent).</p>
+                        <ul>
+                            <li class="fragment">Du JavaScript (Node.js et Browser - IE10 et +)</li>
+                            <li class="fragment">Python (2.7 avec Twisted et 3.4 avec asyncio)</li>
+                            <li class="fragment">C++ (si si, faire un backend en C++ est facile maintenant)</li>
+                            <li class="fragment">Java</li>
+                            <li class="fragment">Objective-C</li>
+                            <li class="fragment">PHP (malheureusement)</li>
+                            <li class="fragment">C#</li>
+                            <li class="fragment">Et plein d'autres... (des clients Rust et Elixir sont prévus !)</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h3>Des RPC</h3>
+                        <p class="fragment">Remote Procedure Call, c'est un appel de fonction à distance.</p>
+                    </section>
+
+                    <section>
+                        <h3>Les RPC par l'exemple</h3>
+                        <pre class="fragment"><code data-trim>
+session.call('com.meetup.react.eat_pizza', [
+    {
+        "feedback": "Very good pizzas, I must say.",
+        "happy": true
+    }
+]).then(function (pizzas) {
+  console.log("Mmmmmm, good pizzas.");
+}).catch(function (why) {
+  console.log("Sad panda :(", why);
+});
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h3>Principe de microservices</h3>
+                        <p class="fragment">Chaque élement connecté au routeur peut enregistrer des RPC</p>
+                        <p class="fragment">Ainsi, on peut découpler les services d'authentification, de chat, de l'application, etc...</p>
+                    </section>
+
+                    <section>
+                        <a href="http://imgur.com/r7LO078"><img src="http://i.imgur.com/r7LO078.png" title="source: imgur.com" /></a>
+                        <p class="fragment">On peut facilement faire du hot swapping de services, du load balancing, et s'assurer de très bonnes performances.</p>
+                    </section>
+
+                    <section>
+                        <h3>Du PubSub</h3>
+                        <p class="fragment">On peut souscrire à un topic et recevoir des évenements publiés.</p>
+                        <p class="fragment">On peut vice-versa publier des événements à 0, 1, 2 jusqu'à N clients qui ont souscrits à un topic.</p>
+                    </section>
+
+                    <section>
+                        <h3>Exemple : Subscribe</h3>
+                        <p class="fragment">Et tout le monde ainsi peut savoir qui mange des pizzas!</p>
+                        <pre class="fragment"><code data-trim>
+function onPizzaEaten(args, kwargs, details) {
+   if (!details.publisher) {
+     console.log("I don't know who it is, but he has eaten a pizza anyway!");
+   }
+   console.log("Hey! " + details.publisher + " has eaten a pizza!");
+}
+session.subscribe('com.meetup.react.pizza_eaten', onPizzaEaten);
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h3>Exemple: Publish</h3>
+                        <p class="fragment">Quelqu'un peut publier des événements à toutes les personnes qui ont souscrit au topic.</p>
+                        <pre class="fragment"><code data-trim>
+session.publish('com.meetup.react.pizza_eaten', [], {}, 
+  {disclose_me: true});
+                        </code></pre>
+                        <button class="fragment" onclick="eatPizza()">Essayons ce morceau de code!</button>
+                    </section>
+
+                    <section>
+                        <h3>Exemple : Synchronisation</h3>
+                        <p class="fragment">On peut s'en servir pour gérer des events.</p>
+                        <pre class="fragment"><code data-trim>
+session.subscribe('com.meetup.react.participants.on_leave', 
+  function (leaver) {
+    console.log("Bye bye " + leaver);
+    removeParticipant(leaver);
+});
+                        </code></pre>
+                    </section>
+
+                    <section data-state="unsubscribe_pizza">
+                        <h3>Mais comment ça marche ?</h3>
+                        <p class="fragment">En réalité, à chaque appel que vous faites (PubSub ou RPC), vous passez par un routeur.</p>
+                        <p class="fragment">Ce routeur va assurer l'interopérabilité entre les différents composants, la sécurité (authentification + autorisations).</p>
+                        <p class="fragment">L'implémentation du routeur existe en plusieurs langages, mais la plus avancée reste Crossbar.io (Python)</p>
+                    </section>
+
+                    <section>
+                        <a href="http://imgur.com/EGvZFvF"><img src="http://i.imgur.com/EGvZFvF.png" title="source: imgur.com" /></a>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h2>Qu'en est-t-il de React dans cette histoire?</h2>
+                        <p class="fragment">Faire du realtime avec React est possible à travers plusieurs moyens.</p>
+                        <ul>
+                            <li class="fragment">Meteor.js (JavaScript only)</li>
+                            <li class="fragment">Relay / GraphQL (Indisponible)</li>
+                            <li class="fragment">AutobahnJS ?</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h3>AutobahnJS ?</h3>
+                        <p class="fragment">Le problème avec AutobahnJS, c'est le code peut vite devenir complexe à cause de la boilerplate nécessaire.</p>
+                        <pre class="fragment"><code data-trim>
+var c = new autobahn.Connection({
+  url: 'ws://127.0.0.1:8000/ws',
+  realm: 'meetup',
+  authmethods: ['ticket'],
+  authid: 'Raito',
+  onchallenge: function (session, method, extra) {
+    if (method !== "ticket") {
+      throw new Error("Invalid auth method!");
+    }
+
+    return "passw0rd";
+}});
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h3>AutobahnReact</h3>
+                        <p class="fragment">C'est une lib JS qui vise à wrapper toute la boilerplate à écrire qu'on rencontre avec Autobahn et React.</p>
+                        <p class="fragment">Elle est <span class="fragment highlight-red">très jeune</span> encore.</p>
+                        <p class="fragment">Open source en licence GPLv2.</p>
+                        <a class="fragment">https://github.com/RaitoBezarius/AutobahnReact</a>
+                        <p class="fragment">Codée en ECMAScript 6, transpilée par Babel.</p>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>Gestion de la durée de vie d'une connexion</h3>
+                    </section>
+
+                    <section>
+                        <h3>L'initialisation</h3>
+                        <pre><code data-trim>
+Autobahn.initialize('ws://127.0.0.1:8000/ws', 'example');
+                        </code></pre>
+                        <pre class="fragment"><code data-trim>
+Autobahn.browserInitialize(8000, 'ws', 'example');
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h3>Cycle de vie d'une connexion</h3>
+                        <pre><code data-trim>
+Autobahn.Connection.onLost((details) =&gt; {
+  this.setState({connected: false, 
+    message: "Attention, la connexion est temporairement interrompu!"});
+});
+                        </code></pre>
+                    </section>
+
+                    <section id="step_1" data-state="mount_step_1">
+                    </section>
+
+                    <section>
+                        <h3>Authentification et autorisations</h3>
+                    </section>
+
+                    <section>
+                        <h3>Authentification</h3>
+                        <p>Plusieurs schéma d'authentification sont possibles.</p>
+                        <ul>
+                            <li class="fragment">WAMP-CRA</li>
+                            <li class="fragment">Ticket</li>
+                            <li class="fragment">OTP</li>
+                            <li class="fragment">Le vôtre?</li>
+                        </ul>
+                    </section>
+
+                    <section>
+                        <h3>Exemple : Authentification (ticket)</h3>
+                        <pre><code data-trim>
+Autobahn.Auth.become("topsecret_ticket_randomly_generated")
+.then((session) =&gt; {
+  console.log("You're authenticated!");
+});
+                        </code></pre>
+                    </section>
+                    
+                    <section>
+                        <h3>Exemple : Authentification (WAMP-CRA)</h3>
+                        <pre><code data-trim>
+Autobahn.Auth.logIn({username: "raitobezarius", password: "ihatephp"})
+.then((session) =&gt; {
+  console.log("Welcome! You're authenticated as " + Autobahn.Auth.currentUser.role + " !");
+});
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h3>Exemple : Autorisation (rôles)</h3>
+                        <pre><code data-trim>
+render() {
+  return (
+    &lt;RolePolicy roleMustBe="admin"&gt;
+      &lt;DeleteButton /&gt;
+    &lt;/RolePolicy&gt;
+  );
+}
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h3>Exemple : Autorisation (dynamique)</h3>
+                        <pre><code data-trim>
+componentDidMount() {
+  Autobahn.Auth.canAccess("com.user.124.edit")
+  .then((Ok) =&gt; {
+    this.setState({canEdit: Ok});
+  });
+}
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h3>Gestion des événements (subscriptions)</h3>
+                        <p>Malheureusement, la gestion des subscriptions reste assez tricky à gérer.</p>
+                    </section>
+
+                    <section>
+                        <h3>Boilerplate par l'exemple</h3>
+                        <pre><code data-trim>
+componentDidMount() {
+  Autobahn.subscribe('com.first_route', this.onSomethingHappen.bind(this))
+  .then((subscription) =&gt; {
+    this.subscriptions.push(subscription);
+    return Autobahn.subscribe('com.second_route', this.onSomethingOtherHappen.bind(this));
+  }).then((subscription) =&gt; {
+    ...
+  }
+}
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h3>Boilerplate par l'exemple (2)</h3>
+                        <pre><code data-trim>
+componentWillUnmount() {
+  for (var i = 0 ; i &lt; this.subscriptions.length ; i++) {
+    Autobahn.unsubscribe(this.subscriptions[i]);
+  }
+}
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h3>La solution : Le Higher Order Component</h3>
+                        <pre><code data-trim>
+const ChatRoom = Autobahn.Decorators.requireSubscription(class extends React.Component {
+  static observeSubscriptions() {
+    return {
+     messages: { route: 'com.example.chat.new_message', store: true }
+    }
+  }
+
+  render() {
+    return (
+        &lt;div class="chatroom"&gt;
+       &lt;TextArea messages={this.props.data.messages} /&gt;
+       &lt;SendMessageBar /&gt;
+       &lt;div&gt;
+    );
+  }
+}, {
+  willTransitionTo(transition) {
+    if (Autobahn.Auth.currentUser.role !== "user") {
+      transition.redirect('/login');
+    }
+});
+
+                        </code></pre>
+                    </section>
+
+                    <section>
+                        <h3>D'autres exemples?</h3>
+                        <p class="fragment">Vous pouvez cloner le repo et naviguer parmi le dossier examples qui contient actuellement:</p>
+                        <ul>
+                            <li class="fragment">Un chat realtime</li>
+                            <li class="fragment">Une application typique d'authflow</li>
+                        </ul>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h2>Mais c'est quoi les avantages par rapport à une REST API et du PubSub ?</h2>
+                    </section>
+
+                    <section>
+                        <h3>Les avantages</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Argument</th>
+                                    <th>WAMP</th>
+                                    <th>REST API + PubSub</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>La vitesse</td>
+                                    <td>Les WebSockets sont rapides.</td>
+                                    <td>Les payloads HTTP sont lourds et lents (car stateless).</td>
+                                </tr>
+                                <tr>
+                                    <td>La simplicité</td>
+                                    <td>Le RPC reste assez intuitif.</td>
+                                    <td>Le style REST est parfois compliqué, la sémantique porte à confusion.</td>
+                                </tr>
+                                <tr>
+                                    <td>L'efficacité</td>
+                                    <td>Le PubSub de WAMP permet des updates partielles efficaces.</td>
+                                    <td>Sans PubSub, ça serait des full updates.</td>
+                                </tr>
+                                <tr>
+                                    <td>Le choix de la sérialisation</td>
+                                    <td>Si le JSON est trop lourd, pourquoi pas du MessagePack ?</td>
+                                    <td>Tu prends du JSON ou du XML.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <section>
+                        <h3>Les avantages (2)</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Argument</th>
+                                    <th>WAMP</th>
+                                    <th>REST API + PubSub</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Language agnostic</td>
+                                    <td>Autobahn{Cpp,JS,Python,Android,...} \o/</td>
+                                    <td>Certains langages sont peu utilisable pour servir des API.</td>
+                                </tr>
+                                <tr>
+                                    <td>Backend distribué et modulaire</td>
+                                    <td>Rien n'est couplé, vous pouvez déconnecter temporairement des composants par exemple.</td>
+                                    <td>Si un de vos systèmes plante, tout plante, il faut utiliser des load balancer, et plein d'autres choses...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <section>
+                        <h3>Les désavantages</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Argument</th>
+                                    <th>WAMP</th>
+                                    <th>REST API + PubSub</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>L'immaturité d'Autobahn</td>
+                                    <td>WAMP V1 a été déprécié récemment, c'est encore jeune.</td>
+                                    <td>Le style REST existe depuis un moment.</td>
+                                </tr>
+                                <tr>
+                                    <td>Quelques outils doivent être améliorés</td>
+                                    <td>Le debugging est parfois assez douleureux, le logging aussi.</td>
+                                    <td>Le style REST + PubSub, ça reste assez facile avec les bons outils.</td>
+                                </tr>
+                                <tr>
+                                    <td>L'asynchronicité est obligatoire.</td>
+                                    <td>Il existe cependant un bridge HTTP.</td>
+                                    <td>Le style REST n'est pas nécessairement asynchrone.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                    <section>
+                        <h3>Les déavantages (2)</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Argument</th>
+                                    <th>WAMP</th>
+                                    <th>REST API + PubSub</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>La documentation n'est jamais réellement à jour...</td>
+                                    <td>Never trust the documentation. Trust the source code.</td>
+                                    <td>Les articles sur REST et les tutos sur Redis, et compagnie, y'en a des milliers.</td>
+                                </tr>
+                                <tr>
+                                    <td>Dépendances</td>
+                                    <td>Un routeur en Python (Crossbar)</td>
+                                    <td>Un système de PubSub (Redis, ZMQ, RabbitMQ, etc..)</td>
+                                </tr>
+                                <tr>
+                                    <td>Caching</td>
+                                    <td>Y'a plus de cache ! Il faut le faire soi-même manuellement, avec Redis par exemple.</td>
+                                    <td>Les requêtes HTTP peuvent être cachés car stateless.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+
+                    <section>
+                        <h3>Les déavantages (3)</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Argument</th>
+                                    <th>WAMP</th>
+                                    <th>REST API + PubSub</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Le style</td>
+                                    <td>Chacun ses goûts, mais le RPC n'est peut-être pas pour tout le monde.</td>
+                                    <td>Et vice-versa, le REST n'est pas pour tout le monde.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                </section>
+
+                <section style="text-align: left;">
+                    <h2>Le mot de la fin</h2>
+                    <div class="fragment">
+                        <p>
+                        Le realtime est difficile, mais cela peut devenir très plaisant avec les bons outils.
+                        </p>
+                        <iframe src="//giphy.com/embed/nFjDu1LjEADh6?html5=true" width="480" height="476" frameBorder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+                    </div>
+                </section>
+
+				<section style="text-align: left;">
+					<h1>Voilà !</h1>
+					<p>
+                    Vous apprécierez sûrement plus de ressources sur le sujet: <br>
+                    </p>
+                    <ul>
+                        <li><a>SwarmJS (Offline + Online + Realtime): http://swarmjs.github.io/articles/todomvc/</a></li>
+                    <ul>
+				</section>
+
+                <section>
+                    <h1 style="text-align: center;">Questions ?</h1>
+                </section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react-with-addons.min.js"></script>
+        <script src="js/AutobahnReact.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: false,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+            function notifyUser(message) {
+                if (Notification.permission === "granted") {
+                    var notification = new Notification(message, { tag: 'soManyNotification' });
+                }
+            }
+
+            function eatPizza() {
+                AutobahnReact.publish('com.meetup.react.pizza_eaten', [], {}, { disclose_me: true });
+            }
+
+            var pizza_subscription = null;
+            
+            Reveal.addEventListener('ready', function () {
+                Notification.requestPermission();
+                AutobahnReact.browserInitialize(8000, 'ws', 'example')
+                .then(function (session) {
+                    function onPizzaEaten(args, kwargs, details) {
+                        if (!details.publisher) {
+                            notifyUser("I don't know who it is, but he has eaten a pizza anyway!");
+                        }
+                        else {
+                            notifyUser("Hey! " + details.publisher + " has eaten a pizza!");
+                        }
+                    }
+                    session.subscribe('com.meetup.react.pizza_eaten', onPizzaEaten)
+                    .then(function (subscription) {
+                        pizza_subscription = subscription;
+                    });
+                });
+            });
+
+            Reveal.addEventListener('unsubscribe_pizza', function () {
+                AutobahnReact.unsubscribe(pizza_subscription);
+            });
+		</script>
+
+        <script type="text/jsx">
+            var FirstStep = React.createClass({
+                getInitialState: function () {
+                    return {
+                        connected: AutobahnReact.isConnectionReady(),
+                        details: null
+                    };
+                },
+                componentWillMount: function () {
+                    AutobahnReact.Connection.onUnreachable(function () {
+                        this.setState({connected: false, details: "Serveur injoignable?"});
+                    }.bind(this));
+                    AutobahnReact.Connection.onLost(function () {
+                        this.setState({connected: false, details: "Connexion perdue!"});
+                    }.bind(this));
+                    AutobahnReact.Connection.onReady(function () {
+                        this.setState({connected: true, details: null});
+                    }.bind(this));
+                    AutobahnReact.Connection.onError(function (reason, details) {
+                        this.setState({connected: false, details: "Oh.. Une erreur étrange s'est produite: " + details.reason});
+                    }.bind(this));
+                    try {
+                        AutobahnReact.browserInitialize(8000, 'ws', 'example');
+                    } catch (ex) {
+                        // Silence the error, because we may happen to backward in the presentation.
+                    }
+                },
+                render: function () {
+                    var message = this.state.connected ? "Connexion établi!" : this.state.details;
+                    return (
+                            <div class="react_app">
+                                <h3>{message}</h3>
+                            </div>
+                        );
+                }               
+            });
+            Reveal.addEventListener('mount_step_1', function () {
+                console.log("Mounting the React application, step 1");
+                React.render(<FirstStep />, document.getElementById('step_1'));
+            });
+        </script>
+	</body>
+</html>

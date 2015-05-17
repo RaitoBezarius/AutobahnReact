@@ -1,0 +1,44 @@
+{
+  "name": "autobahn-react",
+  "version": "0.2.0",
+  "description": "Do realtime without headaches with Autobahn and React.",
+  "main": "lib/index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "check": "jsxhint modules/",
+    "clean": "rm -rf dist && rm -rf lib",
+    "build": "npm run clean && npm run build-lib && npm run build-browser",
+    "build-lib": "babel modules/ --out-dir lib/",
+    "build-browser": "mkdir -p dist && browserify modules/ -t [ envify --NODE_ENV production ] -t babelify --outfile dist/AutobahnReact.js --standalone AutobahnReact"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RaitoBezarius/AutobahnReact.git"
+  },
+  "keywords": [
+    "react",
+    "realtime",
+    "autobahn",
+    "wampws"
+  ],
+  "author": "Raito Bezarius <masterancpp@gmail.com>",
+  "license": "GPLv2",
+  "bugs": {
+    "url": "https://github.com/RaitoBezarius/AutobahnReact/issues"
+  },
+  "homepage": "https://github.com/RaitoBezarius/AutobahnReact#readme",
+  "dependencies": {
+    "autobahn": "^0.9.6",
+    "react": "^0.13.3"
+  },
+  "devDependencies": {
+    "babel": "^5.4.3",
+    "babelify": "^6.1.2",
+    "browserify": "^10.2.3",
+    "envify": "^3.4.0",
+    "jshint": "^2.7.0"
+  }
+}
