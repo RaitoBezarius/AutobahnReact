@@ -1,6 +1,6 @@
 {
   "name": "react-autobahn",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Do realtime without headaches with React.",
   "main": "modules/index.js",
   "directories": {
@@ -24,5 +24,13 @@
   "bugs": {
     "url": "https://github.com/RaitoBezarius/react-autobahn/issues"
   },
-  "homepage": "https://github.com/RaitoBezarius/react-autobahn#readme"
+  "homepage": "https://github.com/RaitoBezarius/react-autobahn#readme",
+  "dependencies": {
+    "alt": "^0.16.5",
+    "autobahn": "^0.9.6",
+    "lodash": "^3.8.0"
+  },
+  "devDependencies": {
+    "babel": "^5.4.3"
+  }
 }
