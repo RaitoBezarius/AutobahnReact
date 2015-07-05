@@ -1,14 +1,14 @@
 {
-  "name": "autobahn-react",
-  "version": "0.2.2",
+  "name": "autobahnreact",
+  "version": "0.2.3",
   "description": "Do realtime without headaches with Autobahn and React.",
-  "main": "lib/index.js",
+  "main": "index.js",
   "directories": {
+    "lib": "lib",
     "example": "examples"
   },
   "scripts": {
     "prepublish": "npm run build",
-    "postinstall": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "check": "jsxhint modules/",
     "clean": "rm -rf dist && rm -rf lib",

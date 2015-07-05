@@ -2,7 +2,7 @@
 Make realtime a breeze with React and Autobahn.
 
 ## Installation - quick setup
-You just have to `npm install autobahn-react` to start using it.
+You just have to `npm install AutobahnReact` to start using it.
 
 ## Tutorial and docs
 Check the wiki to access for the tutorial.
