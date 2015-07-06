@@ -4,6 +4,16 @@ import Connection from './Connection.js';
 
 export const Auth = {
   currentUser: null,
+  _signupRoute: 'com.auth.signup',
+  _createTokenRoute: 'com.auth.create_token',
+
+  setSignupRoute(newRoute) {
+    this._signupRoute = newRoute;
+  },
+
+  setTokenCreationRoute(newRoute) {
+    this._createTokenRoute = newRoute;
+  },
 
   _onOpened(args) {
     var session = args[0];
@@ -28,7 +38,7 @@ export const Auth = {
 
   signUp(userPayload) {
     let session = Connection.currentConnection.session;
-    return session.call('com.auth.signup', [userPayload]);
+    return session.call(this._signupRoute, [userPayload]);
   },
   
   logIn(credentials) {
@@ -47,7 +57,7 @@ export const Auth = {
 
   createToken() {
     let session = Connection.currentConnection.session;
-    return session.call('com.auth.create_token', Array.prototype.slice.call(arguments), {disclose_me: true});
+    return session.call(this._createTokenRoute, Array.prototype.slice.call(arguments), {disclose_me: true});
   },
 
   become(token) {
