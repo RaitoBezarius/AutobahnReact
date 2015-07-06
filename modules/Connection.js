@@ -31,8 +31,8 @@ let Connection = {
             this._lostHandlers[i](details);
           }
         } else {
+          console.log("Connection closed", reason, details);
           for (var i = 0 ; i < this._errorHandlers.length ; i++) {
-            console.log("Connection closed", reason, details);
             this._errorHandlers[i](reason, details);
           }
         }
