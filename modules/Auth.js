@@ -32,6 +32,10 @@ export const Auth = {
   },
   
   logIn(credentials) {
+    if (!credentials.username || !credentials.password) {
+      throw new Error("One of credentials can't be null!");
+    }
+
     return Connection.reconnectWithAuth(credentials.username, credentials.password)
       .then(this._onOpened.bind(this))
       .catch(this._onClosed.bind(this));
