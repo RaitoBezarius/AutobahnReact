@@ -1,6 +1,6 @@
 {
   "name": "autobahn-react",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Do realtime without headaches with Autobahn and React.",
   "main": "index.js",
   "directories": {
