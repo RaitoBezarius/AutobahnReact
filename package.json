@@ -13,7 +13,7 @@
     "check": "jsxhint modules/",
     "clean": "rm -rf dist && rm -rf lib",
     "build": "npm run clean && npm run build-lib && npm run build-browser",
-    "build-lib": "babel modules/ --out-dir lib/",
+    "build-lib": "babel --optional runtime modules/ --out-dir lib/",
     "build-browser": "mkdir -p dist && browserify modules/ -t [ envify --NODE_ENV production ] -t babelify --outfile dist/AutobahnReact.js --standalone AutobahnReact"
   },
   "repository": {
@@ -34,6 +34,7 @@
   "homepage": "https://github.com/RaitoBezarius/AutobahnReact#readme",
   "dependencies": {
     "autobahn": "^0.9.6",
+    "babel-runtime": "^5.6.15",
     "react": "^0.13.3"
   },
   "devDependencies": {
