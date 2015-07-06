@@ -1,6 +1,6 @@
 "use strict"
 import Autobahn from 'autobahn';
-import {Connection} from './Connection.js';
+import Connection from './Connection.js';
 
 export const Auth = {
   currentUser: null,

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Connection} from './Connection.js';
+import Connection from './Connection.js';
 
 export function requireSubscriptions (Component, staticMethods = {}) {
   var highOrderComponent = (class extends React.Component {
