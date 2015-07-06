@@ -11,11 +11,11 @@ let Connection = {
 
   connect() {
     var promise = new Promise((resolve, reject) => {
-      this._currentConnection.onopen = function () {
+      this._currentConnection.onopen = function (session, details) {
         for (var i = 0 ; i < this._readyHandlers.length ; i++) {
-          this._readyHandlers[i](...arguments);
+          this._readyHandlers[i]([session, details]);
         }
-        resolve(...arguments);
+        resolve([session, details]);
       }.bind(this);
 
       this._currentConnection.onclose = (reason, details) => {
@@ -33,7 +33,7 @@ let Connection = {
         } else {
           console.log("Connection closed", reason, details);
           for (var i = 0 ; i < this._errorHandlers.length ; i++) {
-            this._errorHandlers[i](reason, details);
+            this._errorHandlers[i]([reason, details]);
           }
         }
       };

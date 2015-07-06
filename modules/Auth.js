@@ -27,12 +27,12 @@ export const Auth = {
       method: details.authmethod
     };
 
-    return Promise.resolve(session, this.currentUser);
+    return Promise.resolve([session, this.currentUser]);
   },
 
   _onClosed() {
     this.currentUser = null;
-    return Promise.reject(arguments);
+    return Promise.reject(Array.prototype.slice.call(arguments));
   },
 
 
