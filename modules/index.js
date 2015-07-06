@@ -7,7 +7,7 @@ var Autobahn = {
   Connection,
   Decorators,
 	initialize(url, realm) {
-		if (Connection.currentConnection) {
+		if (Connection._currentConnection) {
 			throw new Error("Autobahn is already initialized!");
 		}
 
