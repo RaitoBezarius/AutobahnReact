@@ -1,4 +1,4 @@
-import {Connection} from './Connection.js';
+import Connection from './Connection.js';
 import {Auth} from './Auth.js';
 import * as Decorators from './Decorators.js';
 
@@ -21,38 +21,18 @@ var Autobahn = {
     return Connection.currentConnection && Connection.currentConnection.isOpen;
   },
   publish() {
-    if (!this.isConnectionReady()) {
-      throw new Error("Autobahn isn't initialized!");
-    }
-
     return Connection.currentConnection.session.publish(...arguments);
   },
   subscribe() {
-    if (!this.isConnectionReady()) {
-      throw new Error("Autobahn isn't initialized!");
-    }
-
     return Connection.currentConnection.session.subscribe(...arguments);
   },
   unsubscribe() {
-    if (!this.isConnectionReady()) {
-      throw new Error("Autobahn isn't initialized!");
-    }
-
     return Connection.currentConnection.session.unsubscribe(...arguments);
   },
   call() {
-    if (!this.isConnectionReady()) {
-      throw new Error("Autobahn isn't initialized!");
-    }
-
     return Connection.currentConnection.session.call(...arguments);
   },
   register() {
-    if (!this.isConnectionReady()) {
-      throw new Error("Autobahn isn't initialized!");
-    }
-
     return Connection.currentConnection.session.register(...arguments);
   }
 };

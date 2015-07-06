@@ -1,24 +1,24 @@
 import Autobahn from 'autobahn';
 
-export const Connection = {
+let Connection = {
   _url: null,
   _realm: null,
   _unreachableHandlers: [],
   _lostHandlers: [],
   _errorHandlers: [],
   _readyHandlers: [],
-  currentConnection: null,
+  _currentConnection: null,
 
   connect() {
     var promise = new Promise((resolve, reject) => {
-      this.currentConnection.onopen = function () {
+      this._currentConnection.onopen = function () {
         for (var i = 0 ; i < this._readyHandlers.length ; i++) {
           this._readyHandlers[i](...arguments);
         }
         resolve(...arguments);
       }.bind(this);
 
-      this.currentConnection.onclose = (reason, details) => {
+      this._currentConnection.onclose = (reason, details) => {
         if (reason === "unreachable") {
           console.log("Server unreachable", details);
           reject(details);
@@ -38,7 +38,7 @@ export const Connection = {
         }
       };
 
-      this.currentConnection.open();
+      this._currentConnection.open();
     });
     return promise;
   },
@@ -64,11 +64,11 @@ export const Connection = {
   },
 
   makeConnection(params) {
-    if (this.currentConnection && this.currentConnection.isOpen) {
-      this.currentConnection.close();
+    if (this._currentConnection && this._currentConnection.isOpen) {
+      this._currentConnection.close();
     }
 
-    this.currentConnection = new Autobahn.Connection(params);
+    this._currentConnection = new Autobahn.Connection(params);
   },
 
   initialize(url, realm) {
@@ -112,3 +112,17 @@ export const Connection = {
     return this.connect();
   }
 };
+
+Object.defineProperty(Connection, 'currentConnection', {
+  enumerable: true,
+  writeable: false,
+  get: function () {
+    if (Connection._currentConnection && Connection._currentConnection.isOpen) {
+      return Connection._currentConnection;
+    } else {
+      throw new Error("Autobahn isn't initialized yet!");
+    }
+  }
+});
+
+export default Connection;
